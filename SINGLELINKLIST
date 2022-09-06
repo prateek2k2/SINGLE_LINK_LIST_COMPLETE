@@ -5,7 +5,7 @@ struct node
     int info;
     struct node *link;
 };
-void traverse(struct node *head)
+void display(struct node *head)
 {
     if (head == NULL)
     {
@@ -15,6 +15,23 @@ void traverse(struct node *head)
     {
         struct node *temp = head;
         printf("The link list is\n");
+        while (temp != NULL)
+        {
+            printf("%d ", temp->info);
+            temp = temp->link;
+        }
+    }
+}
+void traverse(struct node *head)
+{
+    if (head == NULL)
+    {
+        printf("No node is found");
+    }
+    else
+    {
+        struct node *temp = head;
+        printf("The traverse link list is\n");
         while (temp != NULL)
         {
             printf("%d", temp->info);
@@ -47,12 +64,7 @@ void insert_begin(struct node *head, int value)
         head = new_node;
     }
     printf("The linklist after inserting at begin is \n");
-    struct node *temp = head;
-    while (temp != NULL)
-    {
-        printf("%d", temp->info);
-        temp = temp->link;
-    }
+    display(head);
 }
 void insert_end(struct node *head, int value)
 {
@@ -81,12 +93,8 @@ void insert_end(struct node *head, int value)
         }
         temp = head;
         printf("The linklist after inserting at end is \n");
-        while (temp != NULL)
-        {
-            printf("%d", temp->info);
-            temp = temp->link;
-        }
     }
+    display(head);
 }
 void insert_any(struct node *head, int value, int pos)
 {
@@ -133,12 +141,8 @@ void insert_any(struct node *head, int value, int pos)
             }
         }
     }
-    temp = head;
-    while (temp != NULL)
-    {
-        printf("%d  ", temp->info);
-        temp = temp->link;
-    }
+    printf("Element after instertion: ");
+    display(head);
 }
 void del_first(struct node *head)
 {
@@ -153,13 +157,8 @@ void del_first(struct node *head)
         head = head->link;
         free(temp);
     }
-    temp = head;
     printf("List after deletion\n");
-    while (temp != NULL)
-    {
-        printf("%d", temp->info);
-        temp = temp->link;
-    }
+    display(head);
 }
 void del_end(struct node *head)
 {
@@ -181,13 +180,8 @@ void del_end(struct node *head)
         free(temp->link);
         temp->link = NULL;
     }
-    temp = head;
     printf("Delete from the end\n");
-    while (temp != NULL)
-    {
-        printf("%d", temp->info);
-        temp = temp->link;
-    }
+    display(head);
 }
 void del_any_pos(struct node *head, int pos)
 {
@@ -219,16 +213,12 @@ void del_any_pos(struct node *head, int pos)
         }
     }
     temp = head;
-    printf("Element after deletion is");
-    while (temp != NULL)
-    {
-        printf("%d", temp->info);
-        temp = temp->link;
-    }
+    printf("Element after deletion is ");
+    display(head);
 }
 void count_node(struct node *head)
 {
-    int c=0;
+    int c = 0;
     if (head == NULL)
     {
         printf("No node is found");
@@ -238,16 +228,15 @@ void count_node(struct node *head)
         struct node *temp = head;
         while (temp != NULL)
         {
-            c=c+1;
+            c = c + 1;
             temp = temp->link;
         }
     }
-    printf("The number of node present is  %d\n",c);
-
+    printf("The number of node present is  %d\n", c);
 }
-void search(struct node *head,int val,int n)
+void search(struct node *head, int val, int n)
 {
-    int i,c=0;
+    int i, c = 0;
     struct node *temp = head;
     if (head == NULL)
     {
@@ -255,20 +244,57 @@ void search(struct node *head,int val,int n)
     }
     else
     {
-            temp = head;
-            for (i = 1; i < n; i++)
+        temp = head;
+        while (temp != NULL)
+        {
+            temp = temp->link;
+            c = c + 1;
+            if (temp->info == val)
             {
-                temp = temp->link;
-                c=c+1;
-                if (temp->info==val)
-                {
-                    printf("Value found at node  %d at address %d",c,temp->link);
-                }
-                
+                printf("Value found at node  %d at address %d", c, temp->link);
             }
-        
+        }
     }
 }
+void del_key(struct node *head)
+{
+    printf("Enter Key: ");
+    int key;
+    scanf("%d", &key);
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp = head;
+    if (temp == NULL)
+    {
+        printf("The list is empty");
+    }
+    else if (temp->info == key)
+    {
+        struct node *ptr;
+        ptr = temp->link;
+        head = ptr;
+        free(temp);
+    }
+    else
+    {
+        for (temp = head; temp->link->info != key; temp = temp->link)
+        {
+            ;
+        }
+        if (temp->link == NULL)
+        {
+            printf("The key is not found");
+        }
+        else
+        {
+
+            struct node *p1 = temp->link;
+            temp->link = p1->link;
+            free(p1);
+        }
+    }
+    display(head);
+}
+
 int main()
 {
     int val, pos;
@@ -277,85 +303,110 @@ int main()
     head = (struct node *)malloc(sizeof(struct node));
     head = NULL;
     int n, i;
-    printf("ENTER THE NUMBER OF NODE\n");
-    scanf("%d", &n);
     struct node *N = NULL;
     struct node *M = NULL;
-    M = (struct node *)malloc(sizeof(struct node));
-    for (i = 0; i < n; i++)
+    printf("Enter -1 to stop\n");
+    printf("Enter the data:  ");
+    scanf("%d", &n);
+    while (n != -1)
     {
+        M = (struct node *)malloc(sizeof(struct node));
         if (head == NULL)
         {
             N = (struct node *)malloc(sizeof(struct node));
-            printf("Enter the first node value");
-            scanf("%d", &N->info);
+            N->info = n;
             N->link = NULL;
             head = N;
         }
         else
         {
             M = (struct node *)malloc(sizeof(struct node));
-            printf("Enter the value of %d node", i + 1);
-            scanf("%d", &M->info);
+            M->info = n;
             M->link = NULL;
             N->link = M;
             N = M;
         }
+        printf("Enter the data:  ");
+        scanf("%d", &n);
     }
-    printf("Enter your choice \n1 To trasverse\n2 To check list\n3 To insert at the beginning\n4 To insert at the end\n5 To instert at any position \n6 To delete first element \n7 To delete from end\n8 To delete element at any pos\n9 Count the number of node\n10 Search the elemnet from the linklist\n ");
+    display(head);
+    printf("\nEnter your choice \n1 To trasverse\n2 To check list\n3 To insert at the beginning\n4 To insert at the end\n5 To instert at any position \n6 To delete first element \n7 To delete from end\n8 To delete element at any pos\n9 Count the number of node\n10 Search the elemnet from the linklist\n11 To delete a key from node\n ");
     scanf("%d", &option);
-    if (option == 1)
+    switch (option)
+    {
+    case 1:
     {
         traverse(head);
+        break;
     }
-    else if (option == 2)
+    case 2:
     {
         check_list(head);
+        break;
     }
-    else if (option == 3)
+    case 3:
     {
-        printf("enter the element to insert at the begin\n ");
+        printf("Enter the element to insert at the begin\n ");
         scanf("%d", &val);
         insert_begin(head, val);
+        break;
     }
-    else if (option == 4)
+    case 4:
     {
         printf("Enter the element at the end of the list\n ");
         scanf("%d", &val);
         insert_end(head, val);
+        break;
     }
-    else if (option == 5)
+    case 5:
     {
         printf("Enter the element to be inserted at any option");
         scanf("%d", &val);
         printf("Enter the position");
         scanf("%d", &pos);
         insert_any(head, val, pos);
+        break;
     }
-    else if (option == 6)
+    case 6:
     {
         del_first(head);
+        break;
     }
-    else if (option == 7)
+    case 7:
     {
         del_end(head);
+        break;
     }
-    else if (option == 8)
+    case 8:
     {
         printf("Enter the position from which element is to be deleted:");
         scanf("%d", &pos);
         del_any_pos(head, pos);
+        break;
     }
-    else if(option==9)
+    case 9:
     {
         count_node(head);
+        break;
     }
-    else if(option==10)
+    case 10:
     {
         printf("Enter the value to be search  :");
-        scanf("%d",&val);
-        search(head,val,n);
+        scanf("%d", &val);
+        search(head, val, n);
+        break;
     }
-
-    return 0;
+    case 11:
+    {
+        ;
+        del_key(head);
+        break;
+    }
+    default:
+    {
+        printf("Wrong Key :");
+        break;
+    }
+        return 0;
+    }
 }
